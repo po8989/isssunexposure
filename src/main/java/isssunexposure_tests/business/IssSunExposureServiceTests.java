@@ -1,14 +1,12 @@
 package isssunexposure_tests.business;
 
 import io.quarkus.test.junit.QuarkusTest;
-import isssunexposure.api.IssSunExposure;
 import isssunexposure.business.IIssSunExposureService;
 import isssunexposure.business.IssSunExposureService;
-import org.junit.jupiter.api.BeforeAll;
+import isssunexposure.helpers.SatelliteParserHelper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
@@ -17,30 +15,50 @@ public class IssSunExposureServiceTests {
     private IIssSunExposureService issSunExposureService = new IssSunExposureService();
 
     @Test
-    public void IssSunExposureService_GetCurrentSatelliteInfoById_VerifySatelliteRetrieved() throws Exception {
+    public void IssSunExposureService_GetSunExposureWindowHistory_VerifySatelliteRetrieved() throws Exception {
         // Arrange
         var satelliteId = 25544;
 
         // Act
-            var iss = issSunExposureService.GetCurrentSatelliteInfoById(satelliteId);
+        var iss = issSunExposureService.GetSunExposureWindowHistory(satelliteId);
+        var satellite = SatelliteParserHelper.ParseSatelliteAsObject(iss);
 
         // Assert
-        assertEquals(satelliteId, iss.id);
-        assertEquals("iss", iss.name);
+        assertEquals(satelliteId, satellite.id);
+        assertEquals("iss", satellite.name);
     }
 
     @Test
-    public void IssSunExposureService_GetCurrentSatelliteInfoById_VerifySatelliteNotExisting_throwsException() {
+    public void IssSunExposureService_GetSunExposureWindowHistory_VerifySatelliteNotExisting_throwsException() {
         // Arrange
-        var satelliteId = 24444;
+        var satelliteId = 999999;
 
         // Act
         try {
-            var iss = issSunExposureService.GetCurrentSatelliteInfoById(satelliteId);
+            var iss = issSunExposureService.GetSunExposureWindowHistory(satelliteId);
+
+            // Assert
+            Assertions.assertEquals("No satellite found", iss);
         }
         catch (Exception e){
-            // Assert
-            assertEquals("satellite not found", e.getMessage());
         }
+    }
+
+    @Test
+    public void IssSunExposureService_GetSunExposureWindowHistory_VerifySatelliteAddedToCache() {
+        // Arrange
+
+        // Act
+
+        // Assert
+    }
+
+    @Test
+    public void IssSunExposureService_GetSunExposureWindowHistory_WithAPIDown_GetSatelliteFromCache() {
+        // Arrange
+
+        // Act
+
+        // Assert
     }
 }
