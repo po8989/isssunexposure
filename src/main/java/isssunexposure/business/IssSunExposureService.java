@@ -17,22 +17,21 @@ public class IssSunExposureService implements IIssSunExposureService {
     /** Method to retrieve the sun exposure window history
      * @return success message
      */
-    public String GetSunExposureWindowHistory() throws Exception {
-        // Get info from ISS
-        var satellite = GetCurrentPosition();
+    public String GetSunExposureWindowHistory(int satelliteId) throws Exception {
+        // Get info from the satellite
+        var satellite = GetCurrentSatelliteInfoById(satelliteId);
 
         return "ISSSatellite retrieved";
     }
 
-    private Satellite GetCurrentPosition() throws Exception {
-        var issId = "25544";
+    public Satellite GetCurrentSatelliteInfoById(int issId) throws Exception {
 
         // Format the url
         var issGetUrl = APIRequestHelper.GetUrl(HOSTISS, APIVERSION, APIPATH) + issId;
         // Call the API to retrieve the info of the ISS
         var issGetResponse = APIRequestHelper.SendGETRequest(issGetUrl, CONTENTTYPE);
 
-        // Parse the response into a Satellite
+        // Parse the response into a Satellite object
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(issGetResponse.body(), Satellite.class);
     }

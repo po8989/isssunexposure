@@ -9,5 +9,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 public interface IIssSunExposureService {
 
-    public String GetSunExposureWindowHistory() throws Exception;
+    public String GetSunExposureWindowHistory(int id) throws Exception;
+    public Satellite GetCurrentSatelliteInfoById(int issId) throws Exception;
+
 }
