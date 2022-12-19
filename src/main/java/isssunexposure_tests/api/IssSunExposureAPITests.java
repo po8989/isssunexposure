@@ -2,7 +2,6 @@ package isssunexposure_tests.api;
 
 import io.quarkus.test.junit.QuarkusTest;
 import isssunexposure.api.gateways.IssSunExposureAPI;
-import isssunexposure.business.IssSunExposureService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

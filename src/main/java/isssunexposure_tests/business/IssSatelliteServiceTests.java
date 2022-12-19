@@ -35,19 +35,15 @@ public class IssSatelliteServiceTests {
     }
 
     @Test
-    public void IssSunExposureService_GetSunExposureWindowHistory_VerifySatelliteNotExisting() {
+    public void IssSunExposureService_GetSunExposureWindowHistory_VerifySatelliteNotExisting() throws Exception {
         // Arrange
         var satelliteId = 999999;
-        Satellite iss = null;
 
         // Act
-        try {
-            iss = issSatelliteService.GetSatelliteById(satelliteId);
-            // TODO Find a way to assert equals null
-            assertNull(iss);
-        }
-        catch (Exception e){
-        }
+        Satellite iss = issSatelliteService.GetSatelliteById(satelliteId);
+        // TODO Find a way to assert equals null
+        // Assert
+        assertNull(iss);
     }
 
     @Test
@@ -71,7 +67,7 @@ public class IssSatelliteServiceTests {
     }
 
     @Test
-    public void IssSunExposureService_GetSatelliteById_WithACallDoneLessThan20SecondsAgo_CallISSAPI() {
+    public void IssSunExposureService_GetSatelliteById_WithACallDoneLessThan20SecondsAgo_DoNotCallISSAPI() {
         // TODO Find a way to expose private methods
         // Arrange
 
@@ -81,7 +77,7 @@ public class IssSatelliteServiceTests {
     }
 
     @Test
-    public void IssSunExposureService_GetSatelliteById_WithACallDoneMoreThan20SecondsAgo_DoNotCallISSAPI() {
+    public void IssSunExposureService_GetSatelliteById_WithACallDoneMoreThan20SecondsAgo_CallISSAPI() {
         // TODO Find a way to expose private methods
         // Arrange
 
