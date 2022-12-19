@@ -1,60 +1,60 @@
 package isssunexposure.business;
 
-import com.google.gson.Gson;
-import isssunexposure.helpers.APIRequestHelper;
-import isssunexposure.helpers.SatelliteParserHelper;
+import isssunexposure.helpers.SunExposureHistoryParserHelper;
 import isssunexposure.models.Satellite;
+import isssunexposure.models.SunExposureHistory;
+import isssunexposure.models.SunExposureHistoryList;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.net.http.HttpResponse;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import javax.inject.Inject;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 public class IssSunExposureService implements IIssSunExposureService {
 
-    private static final String HOSTISS = "https://api.wheretheiss.at";
-    private static final String APIVERSION = "v1";
-    private static final String APIPATH = "satellites";
-    private static final String CONTENTTYPE = "application/json";
-    private static final String ISSCACHEKEY = "ISS";
+    private static final String HOST_ISS = "https://api.wheretheiss.at";
+    private static final String API_VERSION = "v1";
+    private static final String API_PATH = "satellites";
+    private static final String CONTENT_TYPE = "application/json";
 
-    Map<String,String> cacheHashMap = new ConcurrentHashMap<String, String>();
+    Logger logger = Logger.getLogger(IssSunExposureService.class.getName());
 
-    /** Method to retrieve the sun exposure window history
-     * @return success message
+    @Inject
+    private IIssSatelliteService issSatelliteService;
+
+    /** Method to retrieve the sun exposure windows History
+     * @return The satellite json as a String
+     * @param satelliteId The satellite id
      */
-    public String GetSunExposureWindowHistory(int satelliteId) throws Exception {
-        String satelliteValue = null;
-        try {
-            var issGetResponse = GetCurrentSatelliteInfoById(satelliteId);
-            if (issGetResponse.statusCode() == 200) {
-                satelliteValue = issGetResponse.body();
-            }
-        }
-        catch(Exception e){
-            if (cacheHashMap.containsKey(ISSCACHEKEY)) {
-                satelliteValue = cacheHashMap.get(ISSCACHEKEY);
-            }
+    public String GetSunExposureWindowHistory(int satelliteId) throws Exception{
+        var satellite = issSatelliteService.GetSatelliteById(satelliteId);
+
+        // Verify that the satellite is exposed to the sun
+        if (satellite != null){
+
         }
 
-        if (satelliteValue != null) {
-            Satellite satellite = SatelliteParserHelper.ParseSatelliteAsObject(satelliteValue);
-            if (!cacheHashMap.containsKey(ISSCACHEKEY)) {
-                cacheHashMap.put(ISSCACHEKEY, SatelliteParserHelper.ParseSatelliteAsString(satellite));
-            }
+        SunExposureHistoryList hardcodedHistoryList = getDummySunExposureHistoryList(satellite);
 
-            return new Gson().toJson(satellite);
-        }
-
-        return "No satellite found";
+        // Return the list of windowsHistory as a JSON string
+        return SunExposureHistoryParserHelper.ParseSunExposureHistoryAsString(hardcodedHistoryList);
     }
 
-    private HttpResponse<String> GetCurrentSatelliteInfoById(int issId) throws Exception {
-
-        // Format the url
-        var issGetUrl = APIRequestHelper.GetUrl(HOSTISS, APIVERSION, APIPATH) + issId;
-        // Call the API to retrieve the info of the ISS
-        return APIRequestHelper.SendGETRequest(issGetUrl, CONTENTTYPE);
+    /** Method to retrieve the hardcoded list of sun exposure history
+     * @return The list of the sun exposure history
+     */
+    private static SunExposureHistoryList getDummySunExposureHistoryList(Satellite satellite) {
+        // TODO POB Remove Hardcoded values and retrieve windowsHistory
+        // Return hardcoded values
+        var hardcodedHistoryList = new SunExposureHistoryList();
+        var sunExposureHistoryNovember = new SunExposureHistory();
+        sunExposureHistoryNovember.StartTime = 1671303834;
+        sunExposureHistoryNovember.EndTime = 1671362784;
+        var sunExposureHistoryDecember = new SunExposureHistory();
+        sunExposureHistoryDecember.StartTime = 1671199197;
+        sunExposureHistoryDecember.EndTime = 1671362773;
+        hardcodedHistoryList.windowsHistory.add(sunExposureHistoryNovember);
+        hardcodedHistoryList.windowsHistory.add(sunExposureHistoryDecember);
+        return hardcodedHistoryList;
     }
 }
