@@ -1,3 +1,46 @@
+**********************************
+Welcome To the Sun Exposure History API readme file
+**********************************
+With this API, you will be able to retrieve the time when the ISS is exposed to the sun.
+
+All diagrams are available in ./src/main/resources/diagrams
+
+To start the solution, you need to install Intellij with Maven used as build tool and Quarkus framework installed.
+use http://{host}:8081/iss to access the API
+
+To start the solution using commands:
+mvn compile
+mvn package
+Once you have the .jar, run the package with
+java -jar SunExposureHistoryAPI.jar
+
+To run the tests:
+Open your Maven project.
+Create or open a test class in the editor and click the Run button in the gutter to run it.
+The result is displayed in the Run tool window.
+
+To run the tests:
+mvn test
+
+
+*************************************
+Configuration infos:
+Java (JDK 17.0.5)
+Junit 5
+Maven 3.8.1
+Quarkus 2.15.0
+
+Solution dependencies:
+quarkus-resteasy from io.quarkus
+quarkus-arc from io.quarkus
+quarkus-junit5 from io.quarkus
+rest-assured 4.5.1 from io.rest-assured
+jackson-databind 2.14.0 from com.fasterxml.jackson.core
+mockito-inline 4.0.0 from org.mockito
+mockito-junit-jupiter 4.0.0 from org.mockito
+
+
+
 # isssunexposure Project
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
