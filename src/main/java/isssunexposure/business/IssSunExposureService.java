@@ -7,6 +7,7 @@ import isssunexposure.models.SunExposureHistoryList;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -21,6 +22,8 @@ public class IssSunExposureService implements IIssSunExposureService {
 
     @Inject
     private IIssSatelliteService issSatelliteService;
+    @Inject
+    private IEclipseCalculatorService eclipseCalculatorService;
 
     /** Method to retrieve the sun exposure windows History
      * @return The satellite json as a String
@@ -31,9 +34,20 @@ public class IssSunExposureService implements IIssSunExposureService {
 
         // Verify that the satellite is exposed to the sun
         if (satellite != null){
-
+            var isSatelliteIsEclipse = eclipseCalculatorService.IsInEclipse(satellite.altitude,
+                                                                                satellite.latitude,
+                                                                                satellite.longitude,
+                                                                                satellite.solar_lat,
+                                                                                satellite.solar_lon);
+            if (isSatelliteIsEclipse && satellite.visibility.equals("eclipsed")){
+                logger.log(Level.INFO, "The algorithm verifies that the satellite is in eclipse");
+            }
+            else if (!isSatelliteIsEclipse && satellite.visibility.equals("daylight")) {
+                logger.log(Level.INFO, "The algorithm verifies that the satellite is not in eclipse");
+            }
         }
 
+        // TODO POB Remove Hardcoded values and retrieve windowsHistory
         SunExposureHistoryList hardcodedHistoryList = getDummySunExposureHistoryList(satellite);
 
         // Return the list of windowsHistory as a JSON string
@@ -42,9 +56,9 @@ public class IssSunExposureService implements IIssSunExposureService {
 
     /** Method to retrieve the hardcoded list of sun exposure history
      * @return The list of the sun exposure history
+     * @param satellite The satellite data
      */
     private static SunExposureHistoryList getDummySunExposureHistoryList(Satellite satellite) {
-        // TODO POB Remove Hardcoded values and retrieve windowsHistory
         // Return hardcoded values
         var hardcodedHistoryList = new SunExposureHistoryList();
         hardcodedHistoryList.id = satellite.id;
