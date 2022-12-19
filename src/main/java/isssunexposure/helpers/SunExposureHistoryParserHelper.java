@@ -13,4 +13,13 @@ public class SunExposureHistoryParserHelper {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(historyList);
     }
+
+    /** Method helper to parse a JSON string as a list of Sun exposure objects
+     * @return The list of the sun exposure history as an object
+     * @param historyList list of Sun exposure as JSON
+     */
+    public static SunExposureHistoryList ParseSunExposureHistoryAsObject(String historyList) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(historyList, SunExposureHistoryList.class);
+    }
 }

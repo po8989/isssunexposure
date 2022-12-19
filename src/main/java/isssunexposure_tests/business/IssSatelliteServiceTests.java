@@ -35,19 +35,19 @@ public class IssSatelliteServiceTests {
     }
 
     @Test
-    public void IssSunExposureService_GetSunExposureWindowHistory_VerifySatelliteNotExisting_throwsException() {
+    public void IssSunExposureService_GetSunExposureWindowHistory_VerifySatelliteNotExisting() {
         // Arrange
         var satelliteId = 999999;
         Satellite iss = null;
+
         // Act
         try {
             iss = issSatelliteService.GetSatelliteById(satelliteId);
+            // TODO Find a way to assert equals null
+            assertNull(iss);
         }
         catch (Exception e){
         }
-
-        // Assert
-        assertNull(iss);
     }
 
     @Test

@@ -47,6 +47,8 @@ public class IssSunExposureService implements IIssSunExposureService {
         // TODO POB Remove Hardcoded values and retrieve windowsHistory
         // Return hardcoded values
         var hardcodedHistoryList = new SunExposureHistoryList();
+        hardcodedHistoryList.id = satellite.id;
+        hardcodedHistoryList.name = satellite.name;
         var sunExposureHistoryNovember = new SunExposureHistory();
         sunExposureHistoryNovember.StartTime = 1671303834;
         sunExposureHistoryNovember.EndTime = 1671362784;
